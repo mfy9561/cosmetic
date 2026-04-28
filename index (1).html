@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lumière Beauty — Glow Beyond Limits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Poppins:wght@200;300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════════ */
+:root{
+  --pk:#E8A0B4; --pkd:#C96B8A; --pks:#F5CEDD; --pkp:#FDF0F4; --pkb:#FCEEF3;
+  --w:#FFFFFF;  --off:#FAFAFA; --dk:#111111;  --mid:#444444; --gr:#777777;
+  --bd:#F0D6DF; --bd2:#EBEBEB;
+  --fd:'Playfair Display',serif; --fb:'Poppins',sans-serif;
+  --e:cubic-bezier(.25,.46,.45,.94); --eo:cubic-bezier(.16,1,.3,1);
+}
+
+/* ═══════════════════════════════════════════════════════ BASE */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--w);color:var(--dk);overflow-x:hidden;cursor:none}
+img{display:block;width:100%;object-fit:cover}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+
+/* ═══════════════════════════════════════════════════════ CURSOR */
+#cur-dot{width:8px;height:8px;background:var(--pkd);border-radius:50%;position:fixed;top:0;left:0;z-index:9999;pointer-events:none;transform:translate(-50%,-50%);transition:transform .1s}
+#cur-ring{width:32px;height:32px;border:1.5px solid var(--pkd);border-radius:50%;position:fixed;top:0;left:0;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:width .3s,height .3s,opacity .3s,border-color .3s;opacity:.55}
+#cur-ring.hov{width:54px;height:54px;opacity:.18;border-color:var(--pkd)}
+#cur-ring.click{width:16px;height:16px;opacity:1;border-color:var(--pkd)}
+
+/* ═══════════════════════════════════════════════════════ TICKER */
+.ticker{background:var(--pkd);overflow:hidden;padding:.52rem 0;position:relative;z-index:1001}
+.ticker-track{display:flex;white-space:nowrap;animation:tickMove 28s linear infinite}
+.ticker-track span{padding:0 2.2rem;font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.92);font-weight:300}
+.ticker-track .dot{color:rgba(255,255,255,.35);padding:0 .2rem}
+@keyframes tickMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ═══════════════════════════════════════════════════════ NAV */
+nav{position:fixed;top:30px;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:1rem 4rem;transition:all .45s var(--e)}
+nav.scrolled{top:0;background:rgba(255,255,255,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 1px 0 var(--bd),0 6px 28px rgba(0,0,0,.06)}
+.logo{font-family:var(--fd);font-size:1.55rem;font-weight:500;color:#fff;letter-spacing:.04em;transition:color .4s}
+nav.scrolled .logo{color:var(--dk)}
+.logo span{color:var(--pks);font-style:italic}
+nav.scrolled .logo span{color:var(--pkd)}
+.nav-links{display:flex;gap:2rem}
+.nav-links a{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;font-weight:400;color:rgba(255,255,255,.82);position:relative;transition:color .3s}
+nav.scrolled .nav-links a{color:var(--mid)}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1.5px;background:var(--pkd);transform:scaleX(0);transform-origin:right;transition:transform .35s var(--e)}
+.nav-links a:hover{color:rgba(255,255,255,1)}
+nav.scrolled .nav-links a:hover{color:var(--pkd)}
+.nav-links a:hover::after{transform:scaleX(1);transform-origin:left}
+.nav-right{display:flex;align-items:center;gap:.8rem}
+.nav-icon{background:none;border:none;cursor:none;color:rgba(255,255,255,.82);font-size:1.05rem;padding:.3rem;transition:color .4s;line-height:1}
+nav.scrolled .nav-icon{color:var(--dk)}
+.cart-btn{position:relative}
+.cart-badge{position:absolute;top:-5px;right:-5px;background:var(--pkd);color:#fff;width:15px;height:15px;border-radius:50%;font-size:.5rem;display:flex;align-items:center;justify-content:center;font-family:var(--fb)}
+.ham{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:none;padding:4px}
+.ham span{width:22px;height:1.5px;background:#fff;transition:all .35s;display:block}
+nav.scrolled .ham span{background:var(--dk)}
+.ham.open span:nth-child(1){transform:rotate(45deg) translate(4.5px,4.5px)}
+.ham.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.ham.open span:nth-child(3){transform:rotate(-45deg) translate(4.5px,-4.5px)}
+
+/* ═══════════════════════════════════════════════════════ MOBILE MENU */
+.mob-nav{position:fixed;inset:0;z-index:998;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.2rem;transform:translateX(-100%);transition:transform .5s var(--eo)}
+.mob-nav.open{transform:translateX(0)}
+.mob-nav a{font-family:var(--fd);font-size:2rem;color:var(--dk);transition:color .3s}
+.mob-nav a:hover{color:var(--pkd)}
+
+/* ═══════════════════════════════════════════════════════
+   HERO — FULL 3D PARALLAX
+═══════════════════════════════════════════════════════ */
+.hero{
+  position:relative;height:100vh;min-height:700px;
+  overflow:hidden;display:flex;align-items:center;
+  background:linear-gradient(135deg,#fdf0f4 0%,#fff8fb 40%,#fce8f0 70%,#fdf0f4 100%);
+}
+/* animated background blobs */
+.hero-blob{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;animation:blobFloat 8s ease-in-out infinite alternate}
+.blob1{width:600px;height:600px;background:rgba(232,160,180,.22);top:-100px;right:-100px}
+.blob2{width:400px;height:400px;background:rgba(201,107,138,.12);bottom:-80px;left:10%;animation-delay:2s}
+.blob3{width:300px;height:300px;background:rgba(245,206,221,.35);top:30%;right:25%;animation-delay:4s}
+@keyframes blobFloat{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,20px) scale(1.08)}}
+
+/* sparkle canvas */
+#sparkle-canvas{position:absolute;inset:0;pointer-events:none;z-index:1}
+
+/* hero grid */
+.hero-grid{position:relative;z-index:2;max-width:1300px;margin:0 auto;padding:0 4rem;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+
+/* left content */
+.hero-content{}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:rgba(201,107,138,.1);border:1px solid rgba(201,107,138,.2);color:var(--pkd);border-radius:100px;padding:.35rem 1rem;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500;margin-bottom:1.8rem;animation:slideUp .9s .1s var(--eo) both}
+.hero-eyebrow::before{content:'✦';font-size:.45rem}
+.hero-h1{font-family:var(--fd);font-size:clamp(2.8rem,4.5vw,4.5rem);font-weight:500;line-height:1.08;color:var(--dk);margin-bottom:1.1rem;animation:slideUp .9s .2s var(--eo) both}
+.hero-h1 em{font-style:italic;color:var(--pkd);display:block}
+.hero-sub{font-size:.9rem;font-weight:300;color:var(--gr);line-height:1.85;max-width:380px;margin-bottom:2.4rem;animation:slideUp .9s .35s var(--eo) both}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;animation:slideUp .9s .5s var(--eo) both}
+.btn-pink{display:inline-flex;align-items:center;gap:.5rem;padding:.9rem 2.2rem;background:var(--pkd);color:#fff;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500;border:none;cursor:none;position:relative;overflow:hidden;transition:box-shadow .4s}
+.btn-pink::before{content:'';position:absolute;inset:0;background:var(--dk);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--e)}
+.btn-pink:hover::before{transform:scaleX(1)}
+.btn-pink:hover{box-shadow:0 10px 32px rgba(201,107,138,.4)}
+.btn-pink span{position:relative;z-index:1}
+.btn-ghost{display:inline-flex;align-items:center;gap:.5rem;padding:.9rem 2.2rem;background:transparent;color:var(--dk);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;font-weight:400;border:1.5px solid var(--bd2);cursor:none;transition:all .4s var(--e)}
+.btn-ghost:hover{border-color:var(--pkd);color:var(--pkd)}
+.hero-trust{display:flex;align-items:center;gap:1.5rem;margin-top:2.2rem;padding-top:2rem;border-top:1px solid var(--bd);animation:slideUp .9s .65s var(--eo) both;flex-wrap:wrap}
+.ht-item{display:flex;align-items:center;gap:.4rem;font-size:.65rem;color:var(--gr);letter-spacing:.05em}
+
+/* right — 3D product scene */
+.hero-scene{
+  perspective:1000px;
+  position:relative;height:580px;
+  display:flex;align-items:center;justify-content:center;
+  animation:slideUp .9s .3s var(--eo) both;
+}
+.scene-stage{
+  position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;
+  transition:transform .08s linear;
+}
+/* main product card */
+.hero-main-card{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%) translateZ(0px);
+  width:300px;background:#fff;
+  box-shadow:0 30px 80px rgba(201,107,138,.18),0 8px 24px rgba(0,0,0,.08);
+  border-radius:4px;overflow:hidden;
+  transition:transform .08s linear;
+}
+.hero-main-card-img{height:340px;background:var(--pkp);overflow:hidden}
+.hero-main-card-img img{height:100%;transition:transform .7s var(--eo)}
+.hero-main-card:hover .hero-main-card-img img{transform:scale(1.06)}
+.hero-main-card-body{padding:1.2rem}
+.hmc-tag{font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--pkd);font-weight:500;margin-bottom:.25rem}
+.hmc-name{font-family:var(--fd);font-size:1rem;font-weight:500;color:var(--dk);margin-bottom:.3rem;line-height:1.3}
+.hmc-price{font-size:1.05rem;font-weight:600;color:var(--dk)}
+.hmc-stars{font-size:.72rem;color:var(--pkd);margin-top:.15rem;letter-spacing:.05em}
+
+/* floating product chips */
+.float-chip{
+  position:absolute;background:#fff;
+  box-shadow:0 12px 40px rgba(0,0,0,.12);
+  border-radius:4px;overflow:hidden;
+  display:flex;align-items:center;gap:.75rem;
+  padding:.9rem;cursor:none;
+  transition:transform .08s linear, box-shadow .3s;
+  animation:chipFloat var(--dur,6s) ease-in-out infinite alternate;
+  z-index:3;
+}
+.float-chip:hover{box-shadow:0 20px 60px rgba(201,107,138,.25)}
+.fc-img{width:52px;height:64px;object-fit:cover;flex-shrink:0;background:var(--pkp);border-radius:2px}
+.fc-tag{font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;color:var(--pkd);margin-bottom:.2rem}
+.fc-name{font-family:var(--fd);font-size:.78rem;color:var(--dk);line-height:1.3;margin-bottom:.2rem}
+.fc-price{font-size:.82rem;font-weight:600;color:var(--dk)}
+@keyframes chipFloat{from{transform:translateY(0) translateZ(30px)}to{transform:translateY(-14px) translateZ(30px)}}
+
+/* position each chip */
+.chip1{top:6%;right:2%;--dur:5.5s}
+.chip2{bottom:8%;left:0%;--dur:7s}
+.chip3{top:38%;right:-2%;--dur:6.5s;animation-delay:1s}
+
+/* glow ring behind main card */
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(232,160,180,.3) 0%,transparent 70%);animation:pulseGlow 3s ease-in-out infinite alternate;pointer-events:none;z-index:0}
+@keyframes pulseGlow{from{transform:translate(-50%,-50%) scale(1);opacity:.6}to{transform:translate(-50%,-50%) scale(1.15);opacity:1}}
+
+/* scroll indicator */
+.hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;z-index:5;animation:slideUp 1s 1.2s var(--eo) both}
+.hero-scroll span{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gr)}
+.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,transparent,var(--pkd));animation:scrollPulse 2s ease-in-out infinite}
+@keyframes scrollPulse{0%,100%{opacity:.4;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.2)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══════════════════════════════════════════════════════ TRUST STRIP */
+.trust-strip{background:var(--pkp);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:1.3rem 4rem;display:flex;align-items:center;justify-content:center;gap:3rem;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:.45rem;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gr);font-weight:400}
+.trust-item span{font-size:1rem}
+
+/* ═══════════════════════════════════════════════════════ SECTION HELPERS */
+section{position:relative}
+.sec-head{text-align:center;margin-bottom:3.5rem}
+.sec-tag{display:inline-flex;align-items:center;gap:.45rem;font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--pkd);font-weight:500;margin-bottom:.65rem}
+.sec-tag::before,.sec-tag::after{content:'';display:inline-block;width:22px;height:1px;background:var(--pk)}
+.sec-title{font-family:var(--fd);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:500;color:var(--dk);line-height:1.2}
+.sec-title em{font-style:italic;color:var(--pkd)}
+.sec-sub{margin-top:.6rem;font-size:.86rem;font-weight:300;color:var(--gr);line-height:1.75}
+.divider{width:48px;height:2px;background:linear-gradient(to right,var(--pks),var(--pkd));margin:1.1rem auto 0;border-radius:2px}
+
+/* ═══════════════════════════════════════════════════════ SCROLL REVEAL */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .75s var(--eo),transform .75s var(--eo)}
+.rv.on{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
+
+/* ═══════════════════════════════════════════════════════ CATEGORIES */
+.cats{padding:6rem 4rem;background:#fff}
+.cat-grid{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.cat-card{position:relative;overflow:hidden;aspect-ratio:2/3;cursor:none;border-radius:2px}
+.cat-card img{height:100%;transition:transform .75s var(--eo);filter:brightness(.82)}
+.cat-card:hover img{transform:scale(1.09);filter:brightness(.65)}
+.cat-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(17,17,17,.82) 0%,rgba(17,17,17,.05) 55%)}
+.cat-body{position:absolute;bottom:0;left:0;right:0;padding:1.6rem;transform:translateY(5px);transition:transform .4s var(--e)}
+.cat-card:hover .cat-body{transform:translateY(0)}
+.cat-eyebrow{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--pks);margin-bottom:.3rem}
+.cat-name{font-family:var(--fd);font-size:1.4rem;color:#fff;font-weight:500}
+.cat-cta{display:inline-flex;align-items:center;gap:.3rem;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--pks);margin-top:.55rem;opacity:0;transform:translateY(6px);transition:all .35s var(--e)}
+.cat-card:hover .cat-cta{opacity:1;transform:translateY(0)}
+
+/* ═══════════════════════════════════════════════════════ PRODUCTS */
+.prods{padding:6rem 4rem;background:var(--off)}
+.prods-inner{max-width:1280px;margin:0 auto}
+.filter-row{display:flex;justify-content:center;margin-bottom:3rem;border-bottom:1.5px solid var(--bd);flex-wrap:wrap}
+.ftab{padding:.65rem 1.5rem;background:none;border:none;cursor:none;font-family:var(--fb);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gr);font-weight:400;position:relative;transition:color .3s}
+.ftab::after{content:'';position:absolute;bottom:-1.5px;left:0;right:0;height:2px;background:var(--pkd);transform:scaleX(0);transition:transform .35s var(--e)}
+.ftab.on,.ftab:hover{color:var(--dk)}
+.ftab.on::after,.ftab:hover::after{transform:scaleX(1)}
+.prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+
+/* product card with 3D tilt */
+.prod-card{
+  background:#fff;cursor:none;overflow:hidden;
+  border:1px solid var(--bd);
+  transition:box-shadow .4s var(--e),border-color .4s;
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+.prod-card:hover{box-shadow:0 24px 64px rgba(201,107,138,.16);border-color:var(--pks)}
+.prod-card-img{position:relative;overflow:hidden;aspect-ratio:4/5;background:var(--pkp)}
+.prod-card-img img{height:100%;object-position:center top;transition:transform .75s var(--eo)}
+.prod-card:hover .prod-card-img img{transform:scale(1.08)}
+.prod-badge{position:absolute;top:.85rem;left:.85rem;z-index:2;padding:.27rem .72rem;font-size:.56rem;letter-spacing:.13em;text-transform:uppercase;font-weight:600;border-radius:1px}
+.b-new{background:var(--pkd);color:#fff}
+.b-best{background:var(--dk);color:var(--pks)}
+.b-ltd{background:#7B1A2A;color:#FFD4D8}
+.b-prem{background:var(--pks);color:var(--pkd)}
+.prod-quick{position:absolute;bottom:0;left:0;right:0;z-index:2;display:flex;align-items:center;transform:translateY(100%);transition:transform .42s var(--eo)}
+.prod-card:hover .prod-quick{transform:translateY(0)}
+.q-add{flex:1;padding:.75rem;background:var(--pkd);color:#fff;border:none;cursor:none;font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:background .3s}
+.q-add:hover{background:var(--dk)}
+.q-wish{width:44px;height:44px;background:#fff;border:none;border-left:1px solid var(--bd);cursor:none;display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--gr);transition:all .3s}
+.q-wish:hover{background:var(--pkp);color:var(--pkd)}
+.prod-info{padding:1.2rem 1.3rem}
+.p-cat{font-size:.58rem;letter-spacing:.17em;text-transform:uppercase;color:var(--pkd);font-weight:500;margin-bottom:.25rem}
+.p-name{font-family:var(--fd);font-size:.98rem;font-weight:500;color:var(--dk);margin-bottom:.28rem;line-height:1.3}
+.p-desc{font-size:.72rem;font-weight:300;color:var(--gr);line-height:1.55;margin-bottom:.75rem}
+.p-foot{display:flex;align-items:center;justify-content:space-between}
+.p-price{font-size:1.05rem;font-weight:600;color:var(--dk)}
+.p-stars{font-size:.65rem;color:var(--pkd);letter-spacing:.05em}
+.p-rev{color:var(--gr);font-size:.62rem;margin-left:.2rem}
+
+/* ═══════════════════════════════════════════════════════ LIFESTYLE */
+.life-sec{padding:6rem 4rem;background:#fff}
+.life-grid{max-width:1260px;margin:0 auto;display:grid;grid-template-columns:1.15fr .85fr;grid-template-rows:1fr 1fr;gap:1rem}
+.life-main{grid-row:1/3;position:relative;overflow:hidden;min-height:560px;border-radius:2px}
+.life-main img,.life-sub img{height:100%;min-height:260px;transition:transform .8s var(--eo)}
+.life-main:hover img{transform:scale(1.04)}
+.life-sub{position:relative;overflow:hidden;border-radius:2px}
+.life-sub:hover img{transform:scale(1.06)}
+.life-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(17,17,17,.65) 0%,transparent 55%)}
+.life-cap{position:absolute;bottom:0;left:0;right:0;padding:1.8rem}
+.life-tag{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--pks);margin-bottom:.3rem}
+.life-title{font-family:var(--fd);font-size:1.5rem;color:#fff;font-weight:500;line-height:1.25}
+.life-sub .life-cap{padding:1.2rem 1.4rem}
+.life-sub .life-title{font-size:1.1rem}
+
+/* ═══════════════════════════════════════════════════════ INGREDIENT STRIP */
+.ingr-strip{background:var(--dk);padding:2.5rem 4rem;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0}
+.ingr{flex:1;min-width:150px;text-align:center;padding:1.2rem 1rem;border-right:1px solid rgba(255,255,255,.07)}
+.ingr:last-child{border-right:none}
+.ingr-icon{font-size:1.5rem;margin-bottom:.45rem}
+.ingr-name{font-family:var(--fd);font-size:.88rem;color:var(--pks);margin-bottom:.12rem;font-style:italic}
+.ingr-src{font-size:.58rem;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.28)}
+
+/* ═══════════════════════════════════════════════════════ ABOUT */
+.about-sec{padding:7rem 4rem;background:var(--pkb)}
+.about-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.about-imgs{position:relative}
+.about-frame{position:absolute;top:-18px;left:-18px;right:18px;bottom:18px;border:1.5px solid var(--pk);z-index:0;pointer-events:none}
+.about-main-img{position:relative;z-index:1}
+.about-main-img img{height:560px;box-shadow:0 24px 80px rgba(0,0,0,.1)}
+.about-accent{position:absolute;bottom:-28px;right:-28px;z-index:2;width:185px;border:4px solid #fff;box-shadow:0 12px 40px rgba(0,0,0,.12)}
+.about-accent img{height:148px}
+.about-stat-box{position:absolute;top:1.8rem;right:-44px;z-index:3;background:var(--pkd);color:#fff;padding:1.1rem 1.4rem;text-align:center;min-width:110px;box-shadow:0 8px 28px rgba(201,107,138,.35)}
+.asb-num{font-family:var(--fd);font-size:2rem;line-height:1}
+.asb-lbl{font-size:.55rem;letter-spacing:.13em;text-transform:uppercase;margin-top:.2rem;opacity:.8}
+.about-text .sec-tag{justify-content:flex-start}
+.about-text .sec-tag::before{display:none}
+.about-h2{font-family:var(--fd);font-size:clamp(1.9rem,3vw,2.8rem);font-weight:500;color:var(--dk);line-height:1.2;margin:1rem 0 1.5rem}
+.about-h2 em{font-style:italic;color:var(--pkd)}
+.about-p{font-size:.86rem;font-weight:300;color:var(--gr);line-height:1.9;margin-bottom:1rem}
+.about-pills{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-top:1.8rem}
+.pill{background:#fff;padding:1.2rem;border:1px solid var(--bd);transition:all .3s}
+.pill:hover{border-color:var(--pk);box-shadow:0 4px 20px rgba(232,160,180,.18)}
+.pill-icon{font-size:1.1rem;margin-bottom:.35rem}
+.pill-name{font-size:.78rem;font-weight:500;color:var(--dk);margin-bottom:.12rem}
+.pill-desc{font-size:.7rem;font-weight:300;color:var(--gr);line-height:1.5}
+
+/* ═══════════════════════════════════════════════════════ TESTIMONIALS */
+.testi-sec{padding:6rem 4rem;background:#fff}
+.testi-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.t-card{background:#fff;border:1.5px solid var(--bd);padding:2.2rem;transition:all .4s var(--e)}
+.t-card:hover{border-color:var(--pk);box-shadow:0 12px 48px rgba(232,160,180,.2);transform:translateY(-5px)}
+.t-stars{color:var(--pkd);font-size:.78rem;letter-spacing:.1em;margin-bottom:.9rem}
+.t-body{font-family:var(--fd);font-size:1rem;font-style:italic;color:var(--dk);line-height:1.75;margin-bottom:1.5rem}
+.t-author{display:flex;align-items:center;gap:.75rem}
+.t-av{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--pks)}
+.t-av img{height:100%}
+.t-name{font-size:.83rem;font-weight:500;color:var(--dk)}
+.t-loc{font-size:.62rem;color:var(--gr);font-weight:300}
+
+/* ═══════════════════════════════════════════════════════ OFFER */
+.offer-sec{background:var(--pkd);padding:5rem 4rem;text-align:center;position:relative;overflow:hidden}
+.offer-sec::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:rgba(255,255,255,.06);top:-200px;right:-100px;pointer-events:none}
+.offer-sec::after{content:'';position:absolute;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.05);bottom:-120px;left:-60px;pointer-events:none}
+.offer-eyebrow{font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.65);font-weight:300;margin-bottom:.9rem}
+.offer-h{font-family:var(--fd);font-size:clamp(2.4rem,6vw,5rem);color:#fff;font-weight:500;line-height:1;margin-bottom:.4rem}
+.offer-h em{font-style:italic;color:var(--pks)}
+.offer-sub{font-size:.92rem;font-weight:300;color:rgba(255,255,255,.7);margin-bottom:1.8rem}
+.offer-code{display:inline-flex;align-items:center;gap:.9rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);padding:.75rem 1.8rem;margin-bottom:1.8rem;cursor:none;transition:background .3s}
+.offer-code:hover{background:rgba(255,255,255,.22)}
+.oc-label{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.oc-val{font-family:var(--fd);font-size:1.4rem;color:#fff;letter-spacing:.12em}
+.offer-timer{display:flex;gap:1.2rem;justify-content:center;margin-bottom:2.2rem;align-items:flex-start}
+.t-seg{text-align:center}
+.t-val{font-family:var(--fd);font-size:2.8rem;color:#fff;display:block;line-height:1;min-width:60px}
+.t-lbl{font-size:.56rem;letter-spacing:.17em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:.2rem}
+.t-sep{font-family:var(--fd);font-size:2.4rem;color:rgba(255,255,255,.45);padding-top:.1rem}
+.btn-white{display:inline-flex;align-items:center;gap:.5rem;padding:.92rem 2.6rem;background:#fff;color:var(--pkd);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;border:none;cursor:none;transition:all .4s var(--e);position:relative;overflow:hidden}
+.btn-white::before{content:'';position:absolute;inset:0;background:var(--dk);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--e)}
+.btn-white:hover::before{transform:scaleX(1)}
+.btn-white:hover{color:#fff}
+.btn-white span{position:relative;z-index:1}
+
+/* ═══════════════════════════════════════════════════════ INSTAGRAM */
+.ig-sec{padding:6rem 4rem;background:var(--off)}
+.ig-grid{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:.4rem}
+.ig-cell{aspect-ratio:1/1;overflow:hidden;position:relative;cursor:none;border-radius:1px}
+.ig-cell img{height:100%;transition:transform .65s var(--eo);filter:brightness(.9)}
+.ig-cell:hover img{transform:scale(1.1);filter:brightness(.6)}
+.ig-ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;opacity:0;transition:opacity .35s}
+.ig-cell:hover .ig-ov{opacity:1}
+.ig-ov span:first-child{font-size:1.4rem;color:#fff}
+.ig-ov span:last-child{font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:#fff}
+
+/* ═══════════════════════════════════════════════════════ CART */
+.cart-overlay{position:fixed;inset:0;z-index:2000;background:rgba(17,17,17,.44);backdrop-filter:blur(5px);opacity:0;pointer-events:none;transition:opacity .4s}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-panel{position:fixed;top:0;right:0;bottom:0;z-index:2001;width:min(410px,100vw);background:#fff;transform:translateX(100%);transition:transform .5s var(--eo);display:flex;flex-direction:column;box-shadow:-10px 0 60px rgba(0,0,0,.12)}
+.cart-panel.open{transform:translateX(0)}
+.cart-hdr{padding:1.8rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd)}
+.cart-title{font-family:var(--fd);font-size:1.3rem;color:var(--dk)}
+.cart-close{width:34px;height:34px;background:none;border:1.5px solid var(--bd2);cursor:none;display:flex;align-items:center;justify-content:center;font-size:.88rem;color:var(--dk);transition:all .3s}
+.cart-close:hover{background:var(--dk);color:#fff;border-color:var(--dk)}
+.cart-body{flex:1;overflow-y:auto;padding:1.4rem 1.8rem}
+.cart-empty-state{text-align:center;padding:3rem 1rem}
+.cart-empty-state div{font-size:2.5rem;margin-bottom:.8rem}
+.cart-empty-state p{font-size:.84rem;color:var(--gr);line-height:1.7}
+.cart-item{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--bd)}
+.ci-img{width:68px;height:84px;object-fit:cover;flex-shrink:0;background:var(--pkp)}
+.ci-info{flex:1}
+.ci-name{font-family:var(--fd);font-size:.88rem;color:var(--dk);margin-bottom:.2rem}
+.ci-cat{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--pkd);margin-bottom:.38rem}
+.ci-price{font-size:.88rem;font-weight:500;color:var(--dk)}
+.ci-rm{background:none;border:none;cursor:none;color:var(--gr);font-size:.72rem;transition:color .3s}
+.ci-rm:hover{color:#c0392b}
+.cart-ftr{padding:1.4rem 1.8rem 2rem;border-top:1px solid var(--bd)}
+.cart-subtotal{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
+.cs-label{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gr)}
+.cs-val{font-family:var(--fd);font-size:1.4rem;color:var(--dk)}
+.checkout-btn{width:100%;padding:1rem;background:var(--pkd);color:#fff;border:none;cursor:none;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;transition:background .3s}
+.checkout-btn:hover{background:var(--dk)}
+
+/* ═══════════════════════════════════════════════════════ FOOTER */
+footer{background:var(--dk);padding:5rem 4rem 2rem}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:4rem;padding-bottom:4rem;border-bottom:1px solid rgba(255,255,255,.07)}
+.f-logo{font-family:var(--fd);font-size:1.65rem;font-weight:500;color:#fff;margin-bottom:.85rem}
+.f-logo span{color:var(--pk);font-style:italic}
+.f-desc{font-size:.8rem;font-weight:300;color:rgba(255,255,255,.38);line-height:1.8;max-width:230px;margin-bottom:1.5rem}
+.f-socials{display:flex;gap:.65rem}
+.f-social{width:36px;height:36px;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.45);font-size:.78rem;cursor:none;transition:all .3s;font-family:var(--fd);font-style:italic}
+.f-social:hover{background:var(--pkd);border-color:var(--pkd);color:#fff}
+.f-col h4{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--pk);font-weight:500;margin-bottom:1.3rem}
+.f-col li{margin-bottom:.65rem}
+.f-col li a{font-size:.8rem;font-weight:300;color:rgba(255,255,255,.38);transition:color .3s}
+.f-col li a:hover{color:var(--pks)}
+.f-nl p{font-size:.78rem;font-weight:300;color:rgba(255,255,255,.36);line-height:1.7;margin-bottom:.9rem}
+.f-form{display:flex}
+.f-input{flex:1;padding:.72rem 1rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-right:none;color:#fff;font-family:var(--fb);font-size:.78rem;outline:none;transition:border-color .3s}
+.f-input::placeholder{color:rgba(255,255,255,.22)}
+.f-input:focus{border-color:rgba(232,160,180,.35)}
+.f-sub{padding:.72rem 1rem;background:var(--pkd);border:none;cursor:none;color:#fff;font-size:.85rem;transition:background .3s}
+.f-sub:hover{background:var(--pk)}
+.f-contact{margin-top:1rem;font-size:.72rem;font-weight:300;color:rgba(255,255,255,.25);line-height:2}
+.footer-bottom{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;padding-top:2rem}
+.f-copy{font-size:.7rem;font-weight:300;color:rgba(255,255,255,.18)}
+.f-badges{display:flex;gap:.45rem}
+.f-badge{padding:.26rem .62rem;border:1px solid rgba(255,255,255,.09);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.18)}
+
+/* ═══════════════════════════════════════════════════════ TOAST */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(16px);z-index:5000;padding:.82rem 1.8rem;background:var(--dk);color:var(--pks);font-size:.73rem;letter-spacing:.1em;opacity:0;transition:all .4s var(--e);pointer-events:none;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.22);border-top:2px solid var(--pkd)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ═══════════════════════════════════════════════════════ RESPONSIVE */
+@media(max-width:1100px){
+  .prod-grid{grid-template-columns:repeat(2,1fr)}
+  .cat-grid{grid-template-columns:repeat(2,1fr)}
+  .about-grid{grid-template-columns:1fr;gap:3rem}
+  .about-imgs{max-width:460px}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem}
+  .life-grid{grid-template-columns:1fr 1fr}
+  .life-main{grid-row:auto;min-height:300px}
+  .life-main img,.life-sub img{min-height:300px}
+  .testi-grid{grid-template-columns:1fr 1fr}
+  .hero-grid{gap:2rem}
+  .chip3{display:none}
+}
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}
+  .hero{height:auto;min-height:100vh}
+  .hero-grid{grid-template-columns:1fr;padding:0 1.5rem;padding-top:7rem;padding-bottom:4rem;gap:3rem}
+  .hero-scene{height:420px}
+  .hero-main-card{width:240px}
+  .hero-main-card-img{height:270px}
+  .chip1{top:2%;right:0;transform:scale(.85)}
+  .chip2{bottom:2%;left:0;transform:scale(.85)}
+  .trust-strip{padding:1.2rem 1.5rem;gap:1.2rem}
+  .cats,.prods,.life-sec,.about-sec,.testi-sec,.offer-sec,.ig-sec{padding:4rem 1.5rem}
+  footer{padding:4rem 1.5rem 2rem}
+  .cat-grid{grid-template-columns:1fr 1fr;gap:.7rem}
+  .prod-grid{grid-template-columns:1fr 1fr;gap:1rem}
+  .testi-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr;gap:2rem}
+  .footer-bottom{flex-direction:column;text-align:center}
+  .ig-grid{grid-template-columns:repeat(3,1fr)}
+  .life-grid{grid-template-columns:1fr}
+  .ingr-strip{padding:1.8rem 1.5rem;flex-wrap:wrap}
+  .ingr{min-width:45%;border-right:none;border-bottom:1px solid rgba(255,255,255,.06);padding:.8rem .5rem}
+  .ingr:last-child{border-bottom:none}
+  .about-pills{grid-template-columns:1fr}
+  .about-stat-box{right:-16px;top:1.2rem}
+  .about-accent{right:-10px;bottom:-16px;width:150px}
+  .about-accent img{height:120px}
+  .ham{display:flex}
+  .nav-links{display:none}
+  #cur-dot,#cur-ring{display:none}
+  body{cursor:auto}
+  .btn-pink,.btn-ghost,.btn-white,.q-add,.q-wish,.ftab,.checkout-btn,.cart-close,.f-social,.f-sub,.cat-card,.prod-card,.t-card,.ig-cell{cursor:auto}
+}
+@media(max-width:480px){
+  .prod-grid{grid-template-columns:1fr}
+  .cat-grid{grid-template-columns:1fr 1fr}
+  .ig-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-scene{height:360px}
+  .hero-main-card{width:200px}
+  .hero-main-card-img{height:230px}
+  .chip2{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- CART -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-panel" id="cartPanel">
+  <div class="cart-hdr">
+    <div class="cart-title">Shopping Bag</div>
+    <button class="cart-close" id="cartClose">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty-state"><div>🛍️</div><p>Your bag is empty.<br>Time to treat yourself beautifully.</p></div>
+  </div>
+  <div class="cart-ftr">
+    <div class="cart-subtotal"><span class="cs-label">Subtotal</span><span class="cs-val" id="cartTotal">₹0</span></div>
+    <button class="checkout-btn" onclick="showToast('✨ Checkout coming soon — stay tuned!')">Checkout Now →</button>
+  </div>
+</aside>
+
+<!-- MOBILE MENU -->
+<nav class="mob-nav" id="mobNav">
+  <a href="#cats" onclick="closeMob()">Collections</a>
+  <a href="#prods" onclick="closeMob()">Shop</a>
+  <a href="#about" onclick="closeMob()">Our Story</a>
+  <a href="#testi" onclick="closeMob()">Reviews</a>
+  <a href="#contact" onclick="closeMob()">Contact</a>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span>Free Shipping above ₹999</span><span class="dot">·</span>
+    <span>Flat 20% OFF — Code: LUMIERE20</span><span class="dot">·</span>
+    <span>100% Cruelty Free &amp; Vegan</span><span class="dot">·</span>
+    <span>Dermatologist Tested</span><span class="dot">·</span>
+    <span>Made in India 🇮🇳</span><span class="dot">·</span>
+    <span>New Arrivals Every Week</span><span class="dot">·</span>
+    <span>Free Shipping above ₹999</span><span class="dot">·</span>
+    <span>Flat 20% OFF — Code: LUMIERE20</span><span class="dot">·</span>
+    <span>100% Cruelty Free &amp; Vegan</span><span class="dot">·</span>
+    <span>Dermatologist Tested</span><span class="dot">·</span>
+    <span>Made in India 🇮🇳</span><span class="dot">·</span>
+    <span>New Arrivals Every Week</span><span class="dot">·</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="logo">Lumière <span>Beauty</span></div>
+  <ul class="nav-links">
+    <li><a href="#cats">Collections</a></li>
+    <li><a href="#prods">Shop</a></li>
+    <li><a href="#about">Our Story</a></li>
+    <li><a href="#testi">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-icon" aria-label="Search">🔍</button>
+    <button class="nav-icon cart-btn" id="cartBtn" aria-label="Cart">🛍<span class="cart-badge" id="cartCount">0</span></button>
+    <button class="ham" id="hamBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════ HERO -->
+<section class="hero" id="home">
+  <canvas id="sparkle-canvas"></canvas>
+  <div class="hero-blob blob1"></div>
+  <div class="hero-blob blob2"></div>
+  <div class="hero-blob blob3"></div>
+
+  <div class="hero-grid">
+    <!-- LEFT: TEXT -->
+    <div class="hero-content">
+      <div class="hero-eyebrow">New Season Collection 2025</div>
+      <h1 class="hero-h1">Your Skin<br>Deserves<em>Pure Luxury</em></h1>
+      <p class="hero-sub">Premium skincare &amp; cosmetics crafted for Indian skin — clean formulas, real results, and confidence that glows every single day.</p>
+      <div class="hero-btns">
+        <a href="#prods" class="btn-pink"><span>Shop Collection</span></a>
+        <a href="#about" class="btn-ghost">Our Story</a>
+      </div>
+      <div class="hero-trust">
+        <div class="ht-item"><span>🌿</span><span>Cruelty Free</span></div>
+        <div class="ht-item"><span>✓</span><span>Derm Tested</span></div>
+        <div class="ht-item"><span>🇮🇳</span><span>Made in India</span></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: 3D SCENE -->
+    <div class="hero-scene" id="heroScene">
+      <div class="scene-stage" id="sceneStage">
+        <div class="hero-glow"></div>
+
+        <!-- MAIN CARD -->
+        <div class="hero-main-card">
+          <div class="hero-main-card-img">
+            <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=700&q=90&fit=crop" alt="Vitamin C Serum"/>
+          </div>
+          <div class="hero-main-card-body">
+            <div class="hmc-tag">Bestseller · Skincare</div>
+            <div class="hmc-name">Radiance Vitamin C Serum</div>
+            <div class="hmc-price">₹899</div>
+            <div class="hmc-stars">★★★★★ (248)</div>
+          </div>
+        </div>
+
+        <!-- FLOATING CHIPS -->
+        <div class="float-chip chip1">
+          <img class="fc-img" src="https://images.unsplash.com/photo-1586495777744-4e6b1b13f2e4?w=200&q=85&fit=crop" alt="Lipstick"/>
+          <div>
+            <div class="fc-tag">Makeup</div>
+            <div class="fc-name">Matte Luxe<br>Lipstick</div>
+            <div class="fc-price">₹599</div>
+          </div>
+        </div>
+
+        <div class="float-chip chip2">
+          <img class="fc-img" src="https://images.unsplash.com/photo-1631214524020-3c69888e0f4b?w=200&q=85&fit=crop" alt="Highlighter"/>
+          <div>
+            <div class="fc-tag">Makeup</div>
+            <div class="fc-name">Rose Gold<br>Highlighter</div>
+            <div class="fc-price">₹999</div>
+          </div>
+        </div>
+
+        <div class="float-chip chip3">
+          <img class="fc-img" src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=200&q=85&fit=crop" alt="Eye Cream"/>
+          <div>
+            <div class="fc-tag">Skincare</div>
+            <div class="fc-name">24K Gold<br>Eye Cream</div>
+            <div class="fc-price">₹2499</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<div class="trust-strip rv">
+  <div class="trust-item"><span>🌸</span>Clean Ingredients</div>
+  <div class="trust-item"><span>🐰</span>Cruelty Free</div>
+  <div class="trust-item"><span>🏥</span>Derm Tested</div>
+  <div class="trust-item"><span>♻️</span>Eco Packaging</div>
+  <div class="trust-item"><span>🇮🇳</span>Made in India</div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="cats rv" id="cats">
+  <div class="sec-head"><div class="sec-tag">Browse</div><h2 class="sec-title">Shop by <em>Category</em></h2><div class="divider"></div></div>
+  <div class="cat-grid">
+    <div class="cat-card rv d1">
+      <img src="https://images.unsplash.com/photo-1570194065650-d99fb4bedf0a?w=700&q=85&fit=crop&crop=top" alt="Skincare" loading="lazy"/>
+      <div class="cat-overlay"></div>
+      <div class="cat-body"><div class="cat-eyebrow">Explore</div><div class="cat-name">Skincare</div><div class="cat-cta">Shop Now →</div></div>
+    </div>
+    <div class="cat-card rv d2">
+      <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=700&q=85&fit=crop&crop=top" alt="Makeup" loading="lazy"/>
+      <div class="cat-overlay"></div>
+      <div class="cat-body"><div class="cat-eyebrow">Explore</div><div class="cat-name">Makeup</div><div class="cat-cta">Shop Now →</div></div>
+    </div>
+    <div class="cat-card rv d3">
+      <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=700&q=85&fit=crop" alt="Haircare" loading="lazy"/>
+      <div class="cat-overlay"></div>
+      <div class="cat-body"><div class="cat-eyebrow">Explore</div><div class="cat-name">Haircare</div><div class="cat-cta">Shop Now →</div></div>
+    </div>
+    <div class="cat-card rv d4">
+      <img src="https://images.unsplash.com/photo-1643185539104-3622eb1c6a99?w=700&q=85&fit=crop" alt="New Arrivals" loading="lazy"/>
+      <div class="cat-overlay"></div>
+      <div class="cat-body"><div class="cat-eyebrow">Explore</div><div class="cat-name">New Arrivals</div><div class="cat-cta">Shop Now →</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="prods" id="prods">
+  <div class="prods-inner">
+    <div class="sec-head rv">
+      <div class="sec-tag">Bestsellers</div>
+      <h2 class="sec-title">Curated for <em>Your Glow</em></h2>
+      <p class="sec-sub">Each product is formulated with skin-loving ingredients for real, visible results</p>
+      <div class="divider"></div>
+    </div>
+    <div class="filter-row rv">
+      <button class="ftab on" data-f="all">All</button>
+      <button class="ftab" data-f="Skincare">Skincare</button>
+      <button class="ftab" data-f="Makeup">Makeup</button>
+      <button class="ftab" data-f="Haircare">Haircare</button>
+      <button class="ftab" data-f="New">New In</button>
+    </div>
+    <div class="prod-grid" id="prodGrid"></div>
+  </div>
+</section>
+
+<!-- LIFESTYLE -->
+<section class="life-sec rv" id="lifestyle">
+  <div class="sec-head"><div class="sec-tag">Real Skin, Real Glow</div><h2 class="sec-title">Beauty in <em>Every Ritual</em></h2><p class="sec-sub">From your morning glow to your evening unwind — Lumière is with you</p><div class="divider"></div></div>
+  <div class="life-grid">
+    <div class="life-main rv d1">
+      <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=900&q=85&fit=crop&crop=top" alt="Morning Ritual" loading="lazy"/>
+      <div class="life-ov"></div>
+      <div class="life-cap"><div class="life-tag">Morning Ritual</div><div class="life-title">Start every day<br>with radiant skin</div></div>
+    </div>
+    <div class="life-sub rv d2">
+      <img src="https://images.unsplash.com/photo-1629198688000-71f23e745b6e?w=700&q=85&fit=crop" alt="Serum" loading="lazy"/>
+      <div class="life-ov"></div>
+      <div class="life-cap"><div class="life-tag">Skincare</div><div class="life-title">Glow from within</div></div>
+    </div>
+    <div class="life-sub rv d3">
+      <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=700&q=85&fit=crop" alt="Makeup" loading="lazy"/>
+      <div class="life-ov"></div>
+      <div class="life-cap"><div class="life-tag">Makeup</div><div class="life-title">Define your look</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INGREDIENT STRIP -->
+<div class="ingr-strip rv">
+  <div class="ingr"><div class="ingr-icon">🌸</div><div class="ingr-name">Kashmiri Saffron</div><div class="ingr-src">Kashmir, India</div></div>
+  <div class="ingr"><div class="ingr-icon">🌿</div><div class="ingr-name">Turmeric Extract</div><div class="ingr-src">Kerala, India</div></div>
+  <div class="ingr"><div class="ingr-icon">🌹</div><div class="ingr-name">Damask Rose</div><div class="ingr-src">Rajasthan, India</div></div>
+  <div class="ingr"><div class="ingr-icon">🥥</div><div class="ingr-name">Virgin Coconut</div><div class="ingr-src">Goa, India</div></div>
+  <div class="ingr"><div class="ingr-icon">🍋</div><div class="ingr-name">Vitamin C Complex</div><div class="ingr-src">Lab-Crafted, Pure</div></div>
+</div>
+
+<!-- ABOUT -->
+<section class="about-sec rv" id="about">
+  <div class="about-grid">
+    <div class="about-imgs rv">
+      <div class="about-frame"></div>
+      <div class="about-main-img"><img src="https://images.unsplash.com/photo-1589710751893-f9a6770ad71b?w=900&q=85&fit=crop&crop=top" alt="Our Story" loading="lazy"/></div>
+      <div class="about-accent"><img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&q=80&fit=crop" alt="Serum" loading="lazy"/></div>
+      <div class="about-stat-box"><div class="asb-num">5+</div><div class="asb-lbl">Years of Glow</div></div>
+    </div>
+    <div class="about-text rv d2">
+      <div class="sec-tag">Our Story</div>
+      <h2 class="about-h2">Born from a<br><em>Love for Beauty</em></h2>
+      <p class="about-p">Lumière Beauty was born in 2019 from a simple belief — every woman deserves to feel extraordinary in her own skin. Founded in Mumbai, our brand bridges the gap between global luxury and the unique needs of Indian skin — its diverse tones, its resilience, its brilliance.</p>
+      <p class="about-p">We source the finest botanicals from across India — saffron from Kashmir, turmeric from Kerala, rose from Rajasthan — and marry them with cutting-edge cosmetic science to create formulas that are not just effective, but truly transformative.</p>
+      <div class="about-pills">
+        <div class="pill"><div class="pill-icon">🌿</div><div class="pill-name">Clean Ingredients</div><div class="pill-desc">No parabens, no sulfates. Pure, purposeful formulas.</div></div>
+        <div class="pill"><div class="pill-icon">🐰</div><div class="pill-name">Cruelty Free</div><div class="pill-desc">Never tested on animals. Always kind, always conscious.</div></div>
+        <div class="pill"><div class="pill-icon">🏥</div><div class="pill-name">Derm Tested</div><div class="pill-desc">Validated for all Indian skin types and tones.</div></div>
+        <div class="pill"><div class="pill-icon">🇮🇳</div><div class="pill-name">Made in India</div><div class="pill-desc">Proudly crafted in state-of-the-art Indian labs.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-sec rv" id="testi">
+  <div class="sec-head"><div class="sec-tag">Customer Love</div><h2 class="sec-title">Real Women, <em>Real Glow</em></h2><div class="divider"></div></div>
+  <div class="testi-grid">
+    <div class="t-card rv d1">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-body">"My skin has never felt this good! The Radiance Serum completely transformed my complexion in just 3 weeks. I get compliments every single day now — truly life-changing."</p>
+      <div class="t-author">
+        <div class="t-av"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100&q=80" alt="Priya" loading="lazy"/></div>
+        <div><div class="t-name">Priya S.</div><div class="t-loc">Mumbai · Verified Buyer</div></div>
+      </div>
+    </div>
+    <div class="t-card rv d2">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-body">"The Matte Luxe Lipstick stays on for 12 hours — no joke! Most pigmented lipstick I've used under ₹1000. This is real luxury that's actually accessible to everyone."</p>
+      <div class="t-author">
+        <div class="t-av"><img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=100&q=80" alt="Ananya" loading="lazy"/></div>
+        <div><div class="t-name">Ananya R.</div><div class="t-loc">Delhi · Verified Buyer</div></div>
+      </div>
+    </div>
+    <div class="t-card rv d3">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-body">"The Charcoal Face Wash has completely cleared my pores! Squeaky clean without drying out. I've recommended it to every single person I know."</p>
+      <div class="t-author">
+        <div class="t-av"><img src="https://images.unsplash.com/photo-1502767089025-6572583495f9?w=100&q=80" alt="Meera" loading="lazy"/></div>
+        <div><div class="t-name">Meera K.</div><div class="t-loc">Bangalore · Verified Buyer</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER BANNER -->
+<section class="offer-sec rv" id="offer">
+  <div class="offer-eyebrow">Limited Time Offer</div>
+  <h2 class="offer-h">Flat <em>20% OFF</em></h2>
+  <p class="offer-sub">on your very first order — because your glow matters</p>
+  <div class="offer-code" onclick="copyCode()">
+    <span class="oc-label">Use Code</span>
+    <span class="oc-val">LUMIERE20</span>
+    <span style="font-size:.78rem;color:rgba(255,255,255,.45)">📋</span>
+  </div>
+  <div class="offer-timer">
+    <div class="t-seg"><span class="t-val" id="tH">08</span><div class="t-lbl">Hours</div></div>
+    <div class="t-sep">:</div>
+    <div class="t-seg"><span class="t-val" id="tM">47</span><div class="t-lbl">Mins</div></div>
+    <div class="t-sep">:</div>
+    <div class="t-seg"><span class="t-val" id="tS">32</span><div class="t-lbl">Secs</div></div>
+  </div>
+  <a href="#prods" class="btn-white"><span>Shop &amp; Save Now →</span></a>
+</section>
+
+<!-- INSTAGRAM -->
+<section class="ig-sec rv" id="insta">
+  <div class="sec-head"><div class="sec-tag">@lumierebeauty.in</div><h2 class="sec-title">Follow Our <em>Journey</em></h2><p class="sec-sub">Tag us for a chance to be featured on our page</p><div class="divider"></div></div>
+  <div class="ig-grid">
+    <div class="ig-cell"><img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=500&q=85&fit=crop" alt="" loading="lazy"/><div class="ig-ov"><span>📷</span><span>View Post</span></div></div>
+    <div class="ig-cell"><img src="https://images.unsplash.com/photo-1583241474913-c23d553fa7b6?w=500&q=85&fit=crop" alt="" loading="lazy"/><div class="ig-ov"><span>📷</span><span>View Post</span></div></div>
+    <div class="ig-cell"><img src="https://images.unsplash.com/photo-1619451334792-150fd785ee74?w=500&q=85&fit=crop" alt="" loading="lazy"/><div class="ig-ov"><span>📷</span><span>View Post</span></div></div>
+    <div class="ig-cell"><img src="https://images.unsplash.com/photo-1607748862156-7c548e7e98f4?w=500&q=85&fit=crop" alt="" loading="lazy"/><div class="ig-ov"><span>📷</span><span>View Post</span></div></div>
+    <div class="ig-cell"><img src="https://images.unsplash.com/photo-1526045612212-70caf35c14df?w=500&q=85&fit=crop" alt="" loading="lazy"/><div class="ig-ov"><span>📷</span><span>View Post</span></div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="footer-grid">
+    <div>
+      <div class="f-logo">Lumière <span>Beauty</span></div>
+      <p class="f-desc">Premium skincare &amp; cosmetics celebrating the radiance of every Indian woman. Glow Beyond Limits.</p>
+      <div class="f-socials">
+        <a class="f-social" href="#" aria-label="Instagram">Ig</a>
+        <a class="f-social" href="#" aria-label="Facebook">Fb</a>
+        <a class="f-social" href="#" aria-label="YouTube">Yt</a>
+        <a class="f-social" href="#" aria-label="Pinterest">Pi</a>
+      </div>
+    </div>
+    <div class="f-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#">Skincare</a></li><li><a href="#">Makeup</a></li>
+        <li><a href="#">Haircare</a></li><li><a href="#">Gift Sets</a></li>
+        <li><a href="#">New Arrivals</a></li><li><a href="#">Bestsellers</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h4>Help</h4>
+      <ul>
+        <li><a href="#">Our Story</a></li><li><a href="#">Ingredients</a></li>
+        <li><a href="#">Shipping &amp; Returns</a></li><li><a href="#">FAQ</a></li>
+        <li><a href="#">Contact Us</a></li><li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+    <div class="f-col f-nl">
+      <h4>Stay in the Glow</h4>
+      <p>Get beauty tips, offers &amp; new launches straight to your inbox.</p>
+      <div class="f-form">
+        <input type="email" class="f-input" placeholder="your@email.com"/>
+        <button class="f-sub" onclick="showToast('✨ You\'re subscribed!')">→</button>
+      </div>
+      <div class="f-contact">✉ hello@lumierebeauty.in<br>📍 Mumbai, Maharashtra, India<br>📞 +91 98200 00000</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="f-copy">© 2025 Lumière Beauty Pvt. Ltd. All Rights Reserved. Made with ♥ in India.</p>
+    <div class="f-badges">
+      <div class="f-badge">Cruelty Free</div>
+      <div class="f-badge">Clean Beauty</div>
+      <div class="f-badge">Made in India</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   PRODUCTS DATA — all 12 products with real images
+═══════════════════════════════════════════════════════ */
+const PRODUCTS = [
+  {
+    id:1, name:"Radiance Vitamin C Serum", price:899, cat:"Skincare", badge:"Bestseller",
+    img:"https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&q=90&fit=crop",
+    desc:"Brightens skin, fades dark spots & reduces dullness in 2 weeks flat",
+    stars:"★★★★★", rev:248
+  },
+  {
+    id:2, name:"Hydra Glow Moisturizer", price:699, cat:"Skincare", badge:"New",
+    img:"https://images.unsplash.com/photo-1611080626919-7cf5a9dbab12?w=600&q=90&fit=crop",
+    desc:"48-hour deep hydration with hyaluronic acid & rose water complex",
+    stars:"★★★★★", rev:192
+  },
+  {
+    id:3, name:"Matte Luxe Lipstick — Ruby Red", price:599, cat:"Makeup", badge:null,
+    img:"https://images.unsplash.com/photo-1586495777744-4e6b1b13f2e4?w=600&q=90&fit=crop",
+    desc:"Long-lasting matte finish with rich pigment & smooth, creamy application",
+    stars:"★★★★☆", rev:317
+  },
+  {
+    id:4, name:"Charcoal Detox Face Wash", price:499, cat:"Skincare", badge:null,
+    img:"https://images.unsplash.com/photo-1556229162-5c63ed9c4efb?w=600&q=90&fit=crop",
+    desc:"Deep-cleans pores, removes impurities & controls excess oil all day",
+    stars:"★★★★★", rev:421
+  },
+  {
+    id:5, name:"Silk Finish Foundation", price:1199, cat:"Makeup", badge:"New",
+    img:"https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&q=90&fit=crop",
+    desc:"Buildable coverage, SPF 20, available in 20 Indian skin tones",
+    stars:"★★★★★", rev:156
+  },
+  {
+    id:6, name:"Rose Gold Highlighter", price:999, cat:"Makeup", badge:"Limited",
+    img:"https://images.unsplash.com/photo-1631214524020-3c69888e0f4b?w=600&q=90&fit=crop",
+    desc:"Blinding luminosity with rose gold shimmer & a satin-glow finish",
+    stars:"★★★★★", rev:203
+  },
+  {
+    id:7, name:"Argan Silk Hair Serum", price:849, cat:"Haircare", badge:null,
+    img:"https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?w=600&q=90&fit=crop",
+    desc:"Frizz control & high-shine with 100% pure Moroccan argan oil formula",
+    stars:"★★★★☆", rev:134
+  },
+  {
+    id:8, name:"24K Gold Eye Cream", price:2499, cat:"Skincare", badge:"Premium",
+    img:"https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600&q=90&fit=crop",
+    desc:"Reduces puffiness, dark circles & fine lines with 24K gold peptides",
+    stars:"★★★★★", rev:89
+  },
+  {
+    id:9, name:"Keratin Repair Hair Mask", price:749, cat:"Haircare", badge:"New",
+    img:"https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&q=90&fit=crop",
+    desc:"Restores damaged hair with intense keratin & bond repair protein complex",
+    stars:"★★★★★", rev:178
+  },
+  {
+    id:10, name:"Niacinamide Glow Toner", price:549, cat:"Skincare", badge:"New",
+    img:"https://images.unsplash.com/photo-1574156903236-a9218cf96218?w=600&q=90&fit=crop",
+    desc:"Minimises pores, controls shine & evens skin tone with 10% niacinamide",
+    stars:"★★★★★", rev:312
+  },
+  {
+    id:11, name:"Velvet Matte Kajal", price:349, cat:"Makeup", badge:null,
+    img:"https://images.unsplash.com/photo-1512207736890-6ffed8a84e8d?w=600&q=90&fit=crop",
+    desc:"Intense black pigment, waterproof formula, lasts all day without smudging",
+    stars:"★★★★★", rev:529
+  },
+  {
+    id:12, name:"Coconut Milk Shampoo", price:449, cat:"Haircare", badge:null,
+    img:"https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=600&q=90&fit=crop",
+    desc:"Gentle sulfate-free cleanser with coconut milk & aloe vera for soft, shiny hair",
+    stars:"★★★★☆", rev:267
+  },
+];
+
+let cart = [];
+
+/* badge class helper */
+function bc(b){
+  if(!b) return '';
+  if(b==='New') return 'b-new';
+  if(b==='Bestseller') return 'b-best';
+  if(b==='Limited') return 'b-ltd';
+  if(b==='Premium') return 'b-prem';
+  return 'b-best';
+}
+
+/* render products */
+function renderProds(filter='all'){
+  const grid = document.getElementById('prodGrid');
+  const list = filter==='all'
+    ? PRODUCTS
+    : PRODUCTS.filter(p => p.cat===filter || (filter==='New' && p.badge==='New'));
+
+  grid.innerHTML = list.map(p=>`
+    <div class="prod-card rv" data-id="${p.id}">
+      <div class="prod-card-img">
+        ${p.badge ? `<div class="prod-badge ${bc(p.badge)}">${p.badge}</div>` : ''}
+        <img src="${p.img}" alt="${p.name}" loading="lazy"/>
+        <div class="prod-quick">
+          <button class="q-add" onclick="addToCart(${p.id})">Add to Bag</button>
+          <button class="q-wish" onclick="showToast('💕 Added to Wishlist!')">♡</button>
+        </div>
+      </div>
+      <div class="prod-info">
+        <div class="p-cat">${p.cat}</div>
+        <div class="p-name">${p.name}</div>
+        <div class="p-desc">${p.desc}</div>
+        <div class="p-foot">
+          <span class="p-price">₹${p.price.toLocaleString('en-IN')}</span>
+          <span class="p-stars">${p.stars}<span class="p-rev"> (${p.rev})</span></span>
+        </div>
+      </div>
+    </div>`).join('');
+
+  /* re-observe new cards */
+  grid.querySelectorAll('.rv').forEach(el => observer.observe(el));
+  /* reattach 3D tilt */
+  attachTilt();
+}
+
+/* filter tabs */
+document.querySelectorAll('.ftab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    renderProds(btn.dataset.f);
+  });
+});
+
+/* ═══════════════════════════════════════════════════════ CART */
+function addToCart(id){
+  const p = PRODUCTS.find(x=>x.id===id);
+  const ex = cart.find(x=>x.id===id);
+  ex ? ex.qty++ : cart.push({...p, qty:1});
+  updateCart();
+  showToast(`✨ ${p.name} added to your bag!`);
+  openCart();
+}
+function removeFromCart(id){
+  cart = cart.filter(x=>x.id!==id);
+  updateCart();
+}
+function updateCart(){
+  const total = cart.reduce((s,c)=>s+c.price*c.qty,0);
+  const count = cart.reduce((s,c)=>s+c.qty,0);
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('cartTotal').textContent = '₹'+total.toLocaleString('en-IN');
+  const body = document.getElementById('cartBody');
+  if(!cart.length){
+    body.innerHTML = '<div class="cart-empty-state"><div>🛍️</div><p>Your bag is empty.<br>Time to treat yourself beautifully.</p></div>';
+    return;
+  }
+  body.innerHTML = cart.map(c=>`
+    <div class="cart-item">
+      <img class="ci-img" src="${c.img}" alt="${c.name}"/>
+      <div class="ci-info">
+        <div class="ci-name">${c.name}</div>
+        <div class="ci-cat">${c.cat}</div>
+        <div class="ci-price">₹${(c.price*c.qty).toLocaleString('en-IN')}
+          ${c.qty>1?`<span style="color:var(--gr);font-size:.72rem;margin-left:.3rem">×${c.qty}</span>`:''}
+        </div>
+      </div>
+      <button class="ci-rm" onclick="removeFromCart(${c.id})">✕</button>
+    </div>`).join('');
+}
+
+function openCart(){
+  document.getElementById('cartPanel').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+}
+function closeCart(){
+  document.getElementById('cartPanel').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+}
+document.getElementById('cartBtn').addEventListener('click', openCart);
+document.getElementById('cartClose').addEventListener('click', closeCart);
+document.getElementById('cartOverlay').addEventListener('click', closeCart);
+
+/* ═══════════════════════════════════════════════════════ TOAST */
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 3200);
+}
+
+/* ═══════════════════════════════════════════════════════ COPY CODE */
+function copyCode(){
+  navigator.clipboard.writeText('LUMIERE20').catch(()=>{});
+  showToast('📋 Code LUMIERE20 copied to clipboard!');
+}
+
+/* ═══════════════════════════════════════════════════════ NAV SCROLL */
+window.addEventListener('scroll',()=>{
+  document.getElementById('mainNav').classList.toggle('scrolled', scrollY > 50);
+});
+
+/* ═══════════════════════════════════════════════════════ MOBILE MENU */
+const hamBtn = document.getElementById('hamBtn');
+hamBtn.addEventListener('click',()=>{
+  hamBtn.classList.toggle('open');
+  document.getElementById('mobNav').classList.toggle('open');
+});
+function closeMob(){
+  hamBtn.classList.remove('open');
+  document.getElementById('mobNav').classList.remove('open');
+}
+
+/* ═══════════════════════════════════════════════════════ SCROLL REVEAL */
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('on'); });
+},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>observer.observe(el));
+
+/* ═══════════════════════════════════════════════════════ CUSTOM CURSOR */
+const dot = document.getElementById('cur-dot');
+const ring = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+document.addEventListener('mousedown',()=>ring.classList.add('click'));
+document.addEventListener('mouseup',()=>ring.classList.remove('click'));
+(function cursorLoop(){
+  if(dot){dot.style.left=mx+'px';dot.style.top=my+'px';}
+  rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+  if(ring){ring.style.left=rx+'px';ring.style.top=ry+'px';}
+  requestAnimationFrame(cursorLoop);
+})();
+document.querySelectorAll('a,button,.prod-card,.cat-card,.t-card,.ig-cell,.float-chip').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring&&ring.classList.add('hov'));
+  el.addEventListener('mouseleave',()=>ring&&ring.classList.remove('hov'));
+});
+
+/* ═══════════════════════════════════════════════════════
+   HERO 3D PARALLAX — mouse tracking
+═══════════════════════════════════════════════════════ */
+const heroScene = document.getElementById('heroScene');
+const sceneStage = document.getElementById('sceneStage');
+
+document.addEventListener('mousemove', e=>{
+  if(!heroScene) return;
+  const rect = heroScene.getBoundingClientRect();
+  /* check if mouse is near hero area */
+  const cx = window.innerWidth/2, cy = window.innerHeight/2;
+  const dx = (e.clientX - cx) / cx; /* -1 to 1 */
+  const dy = (e.clientY - cy) / cy;
+
+  /* tilt the whole stage */
+  const tiltX = dy * -10; /* degrees */
+  const tiltY = dx * 12;
+  if(sceneStage){
+    sceneStage.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+  }
+
+  /* parallax individual chips */
+  const chips = document.querySelectorAll('.float-chip');
+  chips.forEach((chip,i)=>{
+    const depth = (i+1)*0.35;
+    chip.style.transform = `translateX(${dx*depth*18}px) translateY(${dy*depth*12}px) translateZ(30px)`;
+  });
+
+  /* parallax main card (subtle) */
+  const mc = document.querySelector('.hero-main-card');
+  if(mc){
+    mc.style.transform = `translate(-50%,-50%) translateX(${dx*6}px) translateY(${dy*4}px) translateZ(0)`;
+  }
+});
+
+/* reset on mouse leave */
+document.addEventListener('mouseleave',()=>{
+  if(sceneStage) sceneStage.style.transform = 'rotateX(0) rotateY(0)';
+});
+
+/* ═══════════════════════════════════════════════════════
+   PRODUCT CARD 3D TILT
+═══════════════════════════════════════════════════════ */
+function attachTilt(){
+  document.querySelectorAll('.prod-card').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r = card.getBoundingClientRect();
+      const cx = r.left + r.width/2, cy = r.top + r.height/2;
+      const dx = (e.clientX-cx)/(r.width/2);
+      const dy = (e.clientY-cy)/(r.height/2);
+      card.style.transform = `perspective(600px) rotateX(${-dy*5}deg) rotateY(${dx*5}deg) scale(1.02) translateY(-4px)`;
+    });
+    card.addEventListener('mouseleave',()=>{
+      card.style.transform = '';
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   SPARKLE CANVAS
+═══════════════════════════════════════════════════════ */
+const canvas = document.getElementById('sparkle-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle{
+  constructor(){this.reset();}
+  reset(){
+    this.x = Math.random()*canvas.width;
+    this.y = Math.random()*canvas.height;
+    this.r = Math.random()*2.5+0.5;
+    this.vx = (Math.random()-.5)*0.4;
+    this.vy = (Math.random()-.5)*0.4-0.3;
+    this.life = 1;
+    this.decay = Math.random()*0.006+0.003;
+    this.hue = Math.random()*30+330; /* pink/rose range */
+  }
+  draw(){
+    ctx.save();
+    ctx.globalAlpha = this.life*0.6;
+    ctx.fillStyle = `hsl(${this.hue},70%,75%)`;
+    ctx.beginPath();
+    /* sparkle star shape */
+    for(let i=0;i<4;i++){
+      const a = (i/4)*Math.PI*2;
+      const b = a+Math.PI/4;
+      ctx.lineTo(this.x+Math.cos(a)*this.r*2, this.y+Math.sin(a)*this.r*2);
+      ctx.lineTo(this.x+Math.cos(b)*this.r*0.8, this.y+Math.sin(b)*this.r*0.8);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+  update(){
+    this.x+=this.vx; this.y+=this.vy; this.life-=this.decay;
+    if(this.life<=0) this.reset();
+  }
+}
+
+for(let i=0;i<55;i++) particles.push(new Particle());
+
+function animateSparkles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{p.update();p.draw();});
+  requestAnimationFrame(animateSparkles);
+}
+animateSparkles();
+
+/* ═══════════════════════════════════════════════════════ COUNTDOWN */
+let timerEnd = Date.now()+(8*3600+47*60+32)*1000;
+setInterval(()=>{
+  const d = Math.max(0, timerEnd-Date.now());
+  document.getElementById('tH').textContent = String(Math.floor(d/3600000)).padStart(2,'0');
+  document.getElementById('tM').textContent = String(Math.floor((d%3600000)/60000)).padStart(2,'0');
+  document.getElementById('tS').textContent = String(Math.floor((d%60000)/1000)).padStart(2,'0');
+},1000);
+
+/* ═══════════════════════════════════════════════════════ INIT */
+renderProds();
+updateCart();
+</script>
+</body>
+</html>
